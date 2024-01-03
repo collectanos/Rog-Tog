@@ -3,10 +3,10 @@ import random
 
 
 class GENERATOR:
-    def __init__(self, seed, size, place, dif):
+    def __init__(self, seed, size, place, lvl):
         print(seed, size, place)
         self.map = [[''] * size for _ in range(size)]
-        self.dif = dif
+        self.lvl = lvl
         self.size = size
         random.seed(seed)
         self.start_gen = [random.randint(0, size-1), random.randint(0, size-1)]
@@ -22,7 +22,7 @@ class GENERATOR:
         return [i.copy() for i in self.map]
 
     def make_room(self, size):
-        rm = Room.ROOM(size=size, count_enemy=int(10 * (self.dif/10+1)))
+        rm = Room.ROOM(size=size, count_enemy=int(10 * (self.lvl/10+1)))
         rm.set_doors(*[random.randint(0, 1) for _ in range(4)])
         rm.type = "Enemy"
         return rm

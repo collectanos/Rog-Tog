@@ -1,0 +1,74 @@
+{
+  "Pistol": {
+    "race": "1green",
+    "dmg": 75,
+    "reload": 20,
+    "type_shoot": 1,
+    "delay": 15,
+    "bullet_per_clip": -1,
+    "auto_shoot": false,
+    "count_clip": -1,
+    "die": 1000,
+    "image": "Data/img/Pistol.png"
+  },
+  "SMG": {
+    "race": "green",
+    "delay": 30,
+    "dmg": 45,
+    "reload": 1500,
+    "type_shoot": 1,
+    "bullet_per_clip": 50,
+    "auto_shoot": true,
+    "count_clip": 20,
+    "die": 1000,
+    "image": "Data/img/SMG.png"
+  },
+  "KniGun": {
+    "race": "blue",
+    "delay": 2,
+    "dmg": 60,
+    "reload": 500,
+    "type_shoot": 1,
+    "bullet_per_clip": 5000,
+    "auto_shoot": true,
+    "count_clip": 20,
+    "die": 50,
+    "image": "Data/img/KniGun.png"
+  },
+  "LunkaGun": {
+    "race": "gold",
+    "delay": 100,
+    "dmg": 60,
+    "reload": 5000,
+    "type_shoot": 2,
+    "bullet_per_clip": 1000,
+    "auto_shoot": true,	
+    "count_clip": 20,
+    "die": 1500,
+    "image": "Data/img/MegaGun.png"
+  },
+  "Deoin": {
+    "race": "red",
+    "delay": 20,
+    "dmg": 120,
+    "reload": 1000,
+    "type_shoot": 3,
+    "bullet_per_clip": 30,
+    "auto_shoot": true,
+    "count_clip": 10,
+    "die": 1500,
+    "image": "Data/img/Deoin.png"
+  },
+  "Robong": {
+    "race": "red",
+    "delay": 1,
+    "dmg": 100,
+    "reload": 1000,
+    "type_shoot": 1,
+    "bullet_per_clip": 5000,
+    "auto_shoot": true, 
+    "count_clip": 5000,
+    "die": 1500,
+    "image": "Data/img/Robong.png"
+  }
+}

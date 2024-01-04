@@ -2,5 +2,5 @@
 	"logo": "logo.jpg",
 	"title": "exemple mod",
 	"description": "just simple mod for testing mods function and watch how it work",
-	"weapon": ["weapons/Wep1.json", "Wep2.json"]
+	"weapon": ["weapons/Wep1.json", "weapons/Wep2.json"]
 }

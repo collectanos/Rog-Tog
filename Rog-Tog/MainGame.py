@@ -55,26 +55,16 @@ def exit_to_menu():
     resume()
 
 
-def pos_inside(pos, rect):
-    return rect.left < pos[0] < rect.right and rect.top < pos[1] < rect.bottom
-
-
 pause_menu = pygame.Surface((840, 600))
 pause_menu.fill((60, 60, 60))
 
-hud = Table.TABLE((230, 20), (60, 60, 60), "Pause", (480, 150))
-hud.image = pygame.transform.scale(hud.image, (560, 50))
-hud.rect = hud.image.get_rect(center=(hud.rect.center))
+hud = Table.TABLE(size=(380, 50), color=(60, 60, 60), text="Pause", pos=(320, 150), font_size=50)
 group_pause_menu.add(hud)
 
-hud = Table.TABLE((230, 20), (120, 120, 120), "Resume", (310, 250), resume)
-hud.image = pygame.transform.scale(hud.image, (560, 50))
-hud.rect = hud.image.get_rect(center=(hud.rect.center))
+hud = Table.TABLE(size=(380, 50), color=(120, 120, 120), text="Resume", pos=(240, 250), command=resume, font_size=40)
 group_pause_menu.add(hud)
 
-hud = Table.TABLE((230, 20), (120, 120, 120), "Exit", (310, 350), exit_to_menu)
-hud.image = pygame.transform.scale(hud.image, (560, 50))
-hud.rect = hud.image.get_rect(center=(hud.rect.center))
+hud = Table.TABLE(size=(380, 50), color=(120, 120, 120), text="Exit", pos=(240, 350), command=exit_to_menu, font_size=40)
 group_pause_menu.add(hud)
 
 boss = None
@@ -313,8 +303,7 @@ def update(delta):
 
         for btn in group_pause_menu:
             if btn.command:
-                print(Mpos)
-                if pos_inside(Mpos, btn.rect):
+                if btn.pos_in(Mpos):
                     btn.change_color((120, 120, 120))
                     btn.image = pygame.transform.scale(btn.image, (560, 55))
                     btn.rect = btn.image.get_rect(center=(btn.rect.center))

@@ -108,12 +108,13 @@ class PLAYER(pygame.sprite.Sprite):
     def shoot(self, group, wW, hH):
         if self.get_active_weapon().type_shoot == 1:
             group.add(self.make_bullet(wW, hH))
-        elif self.get_active_weapon().type_shoot == 2:
-            mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
 
+        elif self.get_active_weapon().type_shoot == 2:
+            mouse_pos = pygame.Vector2(pygame.mouse.get_pos()[0]*wW, pygame.mouse.get_pos()[1] * hH)
+            pos_bullet = (mouse_pos - self.pos).normalize() * 200
             for i in range(3):
-                x, y = randint(int(mouse_pos[0]-100), int(mouse_pos[0]+100)), randint(int(mouse_pos[1]-100), int(mouse_pos[1]+100))
-                group.add(self.make_bullet(wW, hH, PosM=pygame.Vector2(x, y)))
+                x, y = randint(int(pos_bullet[0]-100), int(pos_bullet[0]+100)), randint(int(pos_bullet[1]-100), int(pos_bullet[1]+100))
+                group.add(self.make_bullet(wW, hH, direct=pygame.Vector2(x, y)))
 
         elif self.get_active_weapon().type_shoot == 3:
             group.add(self.make_bullet(wW, hH, direct=pygame.Vector2(1, 0)))

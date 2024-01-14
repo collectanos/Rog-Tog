@@ -1,5 +1,6 @@
 import pygame
 import GLOBALS
+import os
 
 
 class DRAW:
@@ -51,7 +52,15 @@ class DRAW:
     def draw_heal_bar(hp, max_hp):
         surf = pygame.Surface((100, 12))
         surf.fill((255, 255, 255))
-        pygame.draw.rect(surf, (255, 0, 0), (2, 2, 96*(hp/max_hp), 8))
+        if hp >= max_hp*0.75:
+            pygame.draw.rect(surf, (255, 0, 0), (2, 2, 96*(hp/max_hp), 8))
+        elif hp >= max_hp*0.5:
+            pygame.draw.rect(surf, (255, 165, 0), (2, 2, 96*(hp/max_hp), 8))
+        elif hp >= max_hp*0.25:
+            pygame.draw.rect(surf, (255, 255, 0), (2, 2, 96*(hp/max_hp), 8))
+        else:
+            pygame.draw.rect(surf, (255, 255, 153), (2, 2, 96*(hp/max_hp), 8))
+    
         return surf
 
     @staticmethod
@@ -73,8 +82,9 @@ class DRAW:
         return surf
 
     @staticmethod
-    def table(size, color, text):
+    def table(size, color, text, font_size):
+        f = pygame.font.Font(os.path.dirname(__file__) + "/Data/fonts/game_font.ttf", font_size)
         surf = pygame.Surface(size)
         surf.fill(color)
-        surf.blit(GLOBALS.FONT_TEXT.render(text, False, (0, 0, 0)), (int(0.1*size[0]), int(0.1*size[1])))
+        surf.blit(f.render(text, False, (0, 0, 0)), (5, 5))
         return surf

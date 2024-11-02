@@ -14,6 +14,7 @@ import Weapon
 import ShootEnemy
 import MainMenu
 from GLOBALS import FPS, WIDTH, HEIGHT, WIDTH_M, HEIGHT_M
+from Hint import Hint
 
 pygame.init()
 
@@ -24,6 +25,8 @@ screen = pygame.Surface((WIDTH, HEIGHT))
 arr_enemy = [Enemy.ENEMY, ShootEnemy.SHOOTENEMY]
 
 clock = pygame.time.Clock()
+
+space_hint = Hint()
 
 group_player = pygame.sprite.Group()
 group_enemy = pygame.sprite.Group()
@@ -103,7 +106,7 @@ def init():
 
 def update(delta):
     global can_pressed_key_E, can_pressed_key_P, can_pressed_key_R, group_item, stop_time,\
-        group_item, group_item_use, boss, can_pressed_key_C
+        group_item, group_item_use, boss, can_pressed_key_C, space_hint
 
     group_door.empty()
 
@@ -261,15 +264,20 @@ def update(delta):
         group_enemy_bullet.update(delta)
         group_player.update(delta, group_bullet, WIDTH, HEIGHT, WIDTH_M, HEIGHT_M)
         group_enemy.update(delta, pl.pos, group_item, group_enemy_bullet, WIDTH, HEIGHT)
-
-    group_door.draw(screen)
-    group_item.draw(screen)
-    group_item_use.draw(screen)
-    group_enemy_bullet.draw(screen)
-    group_chest.draw(screen)
-    group_bullet.draw(screen)
-    group_player.draw(screen)
-    group_enemy.draw(screen)
+        group_door.draw(screen)
+        group_item.draw(screen)
+        group_item_use.draw(screen)
+        group_enemy_bullet.draw(screen)
+        group_chest.draw(screen)
+        group_bullet.draw(screen)
+        group_player.draw(screen)
+        group_enemy.draw(screen)
+        
+    collision = pygame.sprite.spritecollide(pl, group_enemy, False)
+    if collision:
+        space_hint.show()
+    else:
+        space_hint.hide()
 
     surf = Draw_windows.DRAW().draw_map(lvl.map, lvl.x, lvl.y, size=50)
     surf.set_alpha(190)
@@ -322,7 +330,10 @@ def update(delta):
 
     if not pl.live():
         init()
-
+        
+    space_hint.update()
+    space_hint.draw(screen)
+    
     surf = pygame.Surface((5, 5))
     surf.fill((255, 255, 255))
     Mpos = pygame.mouse.get_pos()
@@ -330,5 +341,5 @@ def update(delta):
     screen.blit(surf, (Mpos))
 
     clock.tick(FPS)
-
+    
     return screen

@@ -92,20 +92,28 @@ def change_state_mod(modName):
 
 
 def make_mod_cell(direct, i):
-    with open(direct+"/Init.json") as file:
-        modInfo = json.load(file)
-        print(direct.split("/")[-1])
-        print(modInfo, active_mod)
-        print(direct.split("/")[-1] in active_mod)
-        return ModCell(size=(800, 150), color=(90, 90, 90),
-                       text=modInfo["description"],
-                       title=modInfo["title"],
-                       pos=(250, 150*i+160 +(20*i)),
-                       font_size=40,
-                       img=direct+"/"+modInfo["logo"],
-                       active=direct.split("/")[-1] in active_mod,
-                       command=lambda:change_state_mod(direct.split("/")[-1]),
-                       )
+    try:
+        with open(direct+"/Init.json") as file:
+            modInfo = json.load(file)
+            
+            mod_name = direct.split("/")[-1]
+            
+            return ModCell(
+                size=(800, 150),
+                color=(90, 90, 90),
+                text=modInfo["description"],
+                title=modInfo["title"],
+                pos=(250, 150*i+160 +(20*i)),
+                font_size=40,
+                img=direct+"/"+modInfo["logo"],
+                active=mod_name in active_mod,
+                version=modInfo.get("version", "?.?.?"),
+                author=modInfo.get("author", "Unknown"),  
+                command=lambda name=mod_name: change_state_mod(name)
+            )
+    except Exception as e:
+        print(f"Error loading mod at {direct}: {e}")
+        return None
 
 
 def make_page_list_mod():

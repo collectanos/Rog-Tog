@@ -3,7 +3,6 @@ import Enemy
 import Bullet
 import random
 
-
 class BOSS(Enemy.ENEMY):
     def __init__(self, pos):
         super(BOSS, self).__init__(pos)
@@ -16,6 +15,15 @@ class BOSS(Enemy.ENEMY):
         self.dmg = 5
         self.time_to_shoot = pygame.time.get_ticks() + 100
         self.HP = self.hp_max
+        self.bullet_shape = random.choice(["square", "circle", "triangle", "oval", "rectangle"])
+        self.bullet_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+    def make_bullet(self, pos_pl, width, height):
+        pos = pygame.math.Vector2(self.pos_bullet(width, height))
+
+        bl = Bullet.BULLET(pos=pos, direct=(pos_pl - pos).normalize(), can_attack_player=True,
+                           die_time=3000, dmg=15, shape=self.bullet_shape, color=self.bullet_color)
+        return bl
 
     @staticmethod
     def pos_bullet(width, height):

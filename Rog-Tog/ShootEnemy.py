@@ -4,7 +4,6 @@ import Bullet
 import Item
 import random
 
-
 class SHOOTENEMY(Enemy.ENEMY):
     def __init__(self, pos):
         super(SHOOTENEMY, self).__init__(pos)
@@ -12,17 +11,19 @@ class SHOOTENEMY(Enemy.ENEMY):
         self.tp = random.random() < .5
         self.tp_delay = pygame.time.get_ticks()
         self.type_shoot = random.randint(1, 3)
+        self.bullet_shape = random.choice(["square", "circle", "triangle", "oval", "rectangle"])
+        self.bullet_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
     def make_bullet(self, pos_pl, direct=None):
         if direct is None:
             if (pos_pl - self.pos).length() != 0:
                 bl = Bullet.BULLET(pos=self.pos.copy(), direct=(pos_pl - self.pos).normalize(), can_attack_player=True,
-                                   die_time=3000, dmg=15)
+                                   die_time=3000, dmg=15, shape=self.bullet_shape, color=self.bullet_color)
                 return bl
         else:
             if direct.length != 0:
                 bl = Bullet.BULLET(pos=self.pos.copy(), direct=direct, can_attack_player=True,
-                                   die_time=3000, dmg=15)
+                                   die_time=3000, dmg=15, shape=self.bullet_shape, color=self.bullet_color)
                 return bl
         return None
 

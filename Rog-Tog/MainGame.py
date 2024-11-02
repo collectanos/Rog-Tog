@@ -277,8 +277,11 @@ def update(delta):
     screen.blit(surf, (WIDTH-115, 15))
 
     screen.blit(Draw_windows.DRAW().draw_heal_bar(pl.hp, pl.max_hp), (20, 20))
-    pygame.draw.rect(screen, (255, 255, 255), (20, 40, 100, 20))
-    screen.blit(GLOBALS.FONT_TEXT.render(f"Level: {lvl.dif}", False, (90, 90, 90)), (25, 45))
+    level_text = GLOBALS.FONT_TEXT.render(f"Level: {lvl.dif}", False, (255, 255, 255))
+    level_rect = level_text.get_rect()
+    level_rect.topleft = (20, 45)
+    pygame.draw.rect(screen, (90, 90, 90), (level_rect.left - 5, level_rect.top - 5, level_rect.width + 10, level_rect.height + 10))
+    screen.blit(level_text, level_rect)
 
     surf = Draw_windows.DRAW().draw_weapon_interface(pl.get_active_weapon())
     surf.set_alpha(190)

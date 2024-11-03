@@ -24,14 +24,37 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     
+    - name: List directory contents
+      run: dir /s /b
+    
     - name: Build with PyInstaller
-      run: pyinstaller --onefile --add-data "Data;Data" Main.py
+      run: |
+        if exist Main.py (
+          pyinstaller --onefile --add-data "Data;Data" Main.py
+        ) else if exist Rog-Tog\Main.py (
+          pyinstaller --onefile --add-data "Rog-Tog\Data;Data" Rog-Tog\Main.py
+        ) else (
+          echo "Main.py not found"
+          exit 1
+        )
     
     - name: Create ZIP archive
       run: |
         mkdir package
-        move dist\Main.exe package\
-        xcopy /E /I Data package\Data
+        if exist dist\Main.exe (
+          move dist\Main.exe package\
+        ) else (
+          echo "Main.exe not found"
+          exit 1
+        )
+        if exist Data (
+          xcopy /E /I Data package\Data
+        ) else if exist Rog-Tog\Data (
+          xcopy /E /I Rog-Tog\Data package\Data
+        ) else (
+          echo "Data folder not found"
+          exit 1
+        )
         7z a -tzip game.zip package\*
     
     - name: Upload artifact

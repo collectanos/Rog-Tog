@@ -52,11 +52,11 @@ class DRAW:
     def draw_heal_bar(hp, max_hp):
         surf = pygame.Surface((100, 12))
         surf.fill((255, 255, 255))
-        if hp >= 76:
-            pygame.draw.rect(surf, (255, 0, 0), (2, 2, 96, 8))
-        elif hp >= 51:
+        if hp >= max_hp*0.75:
+            pygame.draw.rect(surf, (255, 0, 0), (2, 2, 96*(hp/max_hp), 8))
+        elif hp >= max_hp*0.5:
             pygame.draw.rect(surf, (255, 165, 0), (2, 2, 96*(hp/max_hp), 8))
-        elif hp >= 26:
+        elif hp >= max_hp*0.25:
             pygame.draw.rect(surf, (255, 255, 0), (2, 2, 96*(hp/max_hp), 8))
         else:
             pygame.draw.rect(surf, (255, 255, 153), (2, 2, 96*(hp/max_hp), 8))

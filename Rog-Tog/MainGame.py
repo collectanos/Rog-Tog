@@ -15,6 +15,7 @@ import ShootEnemy
 import MainMenu
 from GLOBALS import FPS, WIDTH, HEIGHT, WIDTH_M, HEIGHT_M
 from Hint import Hint
+from Item import HealingItem
 
 pygame.init()
 

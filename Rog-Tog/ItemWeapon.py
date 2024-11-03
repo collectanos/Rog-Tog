@@ -1,8 +1,7 @@
 import Item
 import pygame
 
-
-class ItemWeapon(Item.ITEM):
+class ItemWeapon(Item.HealingItem):  # Изменено с Item.ITEM на Item.HealingItem
     def __init__(self, pos, weapon):
         super(ItemWeapon, self).__init__(pos, 0)
         self.weapon = weapon

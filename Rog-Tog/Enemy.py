@@ -1,6 +1,6 @@
 import random
 import pygame
-import Item
+from Item import HealingItem
 
 
 class ENEMY(pygame.sprite.Sprite):
@@ -32,5 +32,5 @@ class ENEMY(pygame.sprite.Sprite):
             self.rect.center = self.pos
             if self.HP < 0:
                 if random.random() < 0.1:
-                    group_item.add(Item.ITEM(self.pos))
+                    group_item.add(HealingItem(self.pos))
                 self.kill()

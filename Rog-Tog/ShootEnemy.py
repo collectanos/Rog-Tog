@@ -58,5 +58,5 @@ class SHOOTENEMY(Enemy.ENEMY):
 
             if self.HP < 0:
                 if random.random() < 0.1:
-                    group_item.add(Item.ITEM(self.pos))
+                    group_item.add(Item.HealingItem(self.pos))
                 self.kill()

@@ -14,9 +14,9 @@ menu_status = "Menu"
 
 mouse_click = True
 
-Ww, Hh, = WIDTH / WIDTH_M, HEIGHT / HEIGHT_M
+Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
 
-screen = pygame.Surface((WIDTH, HEIGHT))
+screen = pygame.Surface((WIDTH_M, HEIGHT_M))
 
 clock = pygame.time.Clock()
 
@@ -61,7 +61,8 @@ def change_to():
 
 def page_next():
     global page
-    page += 1
+    if (page + 1) * 3 < len([i[1] for i in os.walk(os.getcwd() + "/Data/mods")][0]):
+        page += 1
     make_page_list_mod()
 
 
@@ -71,7 +72,7 @@ def page_previous():
     make_page_list_mod()
 
 
-def mouse_pos_get():
+def mouse_pos_get(Ww, Hh):
     Mpos = pygame.mouse.get_pos()
     Mpos = (Mpos[0] * Ww, Mpos[1] * Hh)
     return Mpos
@@ -127,48 +128,55 @@ def make_page_list_mod():
 
 
 # btn_group
-TileGame = Table.TABLE(size=(500, 50), color=(50, 50, 50), text="SIMPLE ROUGHLIKE GAME", pos=(WIDTH//3-20, 300),  font_size=40)
+TileGame = Table.TABLE(size=(500, 50), color=(50, 50, 50), text="SIMPLE ROUGHLIKE GAME", pos=(WIDTH_M//3-20, 300),  font_size=40)
 btn_group.add(TileGame)
 
-TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Play", pos=(WIDTH // 3-6, 400), font_size=45, command=start_game)
+TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Play", pos=(WIDTH_M // 3-6, 400), font_size=45, command=start_game)
 btn_group.add(TileGame)
 
-TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Mods", pos=(WIDTH // 3-6, 500), font_size=45, command=change_to)
+TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Mods", pos=(WIDTH_M // 3-6, 500), font_size=45, command=change_to)
 btn_group.add(TileGame)
 
-TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Quit", pos=(WIDTH // 3-6, 600), font_size=45, command=quit_from_game)
+TileGame = Table.TABLE(size=(460, 50), color=(90, 90, 90), text="Quit", pos=(WIDTH_M // 3-6, 600), font_size=45, command=quit_from_game)
 btn_group.add(TileGame)
 
 # mod_list
-TileGame = Table.TABLE(size=(460, 50), color=(50, 50, 50), text="List of mods", pos=(WIDTH // 3, 40), font_size=50)
+TileGame = Table.TABLE(size=(460, 50), color=(50, 50, 50), text="List of mods", pos=(WIDTH_M // 5, 40), font_size=50)
 mod_list.add(TileGame)
 
-TileGame = Table.TABLE(size=(80, 55), color=(50, 50, 50), text="<=", pos=(80, HEIGHT//2), font_size=50, command=page_previous)
+TileGame = Table.TABLE(size=(80, 55), color=(50, 50, 50), text="<=", pos=(40, HEIGHT_M//2), font_size=50, command=page_previous)
 mod_list.add(TileGame)
 
-TileGame = Table.TABLE(size=(80, 55), color=(50, 50, 50), text="=>", pos=(1140, HEIGHT//2), font_size=50, command=page_next)
+TileGame = Table.TABLE(size=(80, 55), color=(50, 50, 50), text="=>", pos=(1100, HEIGHT_M//2), font_size=50, command=page_next)
 mod_list.add(TileGame)
 
-TileGame = Table.TABLE(size=(460, 55), color=(90, 90, 90), text="back", pos=(WIDTH // 3-12, 720), font_size=50, command=change_to)
+TileGame = Table.TABLE(size=(460, 55), color=(90, 90, 90), text="back", pos=(WIDTH_M // 3-12, 720), font_size=50, command=change_to)
 mod_list.add(TileGame)
 
 load_active_mod()
 print([i[1] for i in os.walk(os.getcwd() + "/Data/mods")][0])
 
-def update():
-    global mouse_surf, mouse_click, game_status
+def update(delta, width, height):
+    global mouse_surf, mouse_click, game_status, WIDTH, HEIGHT
+    WIDTH, HEIGHT = width, height
+    Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
     clock.tick(FPS)
 
-    mouse = mouse_pos_get()
+    mouse = mouse_pos_get(Ww, Hh)
 
     for event in pygame.event.get():
+        if event.type == pygame.WINDOWRESIZED:
+            WIDTH = event.x
+            HEIGHT = event.y
+            Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
+        
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
 
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_click:
             mouse_click = False
-            mouse = mouse_pos_get()
+            mouse = mouse_pos_get(Ww, Hh)
             if menu_status == "Menu":
                 for btn in btn_group:
                     if btn.pos_in(mouse):
@@ -197,4 +205,4 @@ def update():
 
     screen.blit(mouse_surf, mouse)
 
-    return screen
+    return pygame.transform.scale(screen, (WIDTH, HEIGHT)), WIDTH, HEIGHT

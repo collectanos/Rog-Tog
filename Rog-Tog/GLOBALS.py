@@ -59,6 +59,7 @@ with open("Data/json/Config.json", "r") as configJSON:
     print(config)
     FPS = config["FPS"]
     WIDTH_M, HEIGHT_M = config["WIDTH"], config["HEIGHT"]
+    WIDTH, HEIGHT = WIDTH_M, HEIGHT_M
 
 weapon_load()
 init_weapon()

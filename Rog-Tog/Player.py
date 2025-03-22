@@ -143,7 +143,7 @@ class PLAYER(pygame.sprite.Sprite):
             self.rect.bottom = height
             self.set_new_pos()
 
-    def update(self, delta, bullet_group, width, height, width_m, height_m):
+    def update(self, delta, bullet_group, Ww, Hh, width_m, height_m):
         if (pygame.key.get_pressed()[pygame.K_LSHIFT] or pygame.key.get_pressed()[pygame.K_SPACE])\
                 and self.time_dash < pygame.time.get_ticks() and self.spam_dash:
             self.pos += (self.move() * self.speed * delta * 11)
@@ -159,7 +159,7 @@ class PLAYER(pygame.sprite.Sprite):
             self.spam_dash = True
 
         if pygame.mouse.get_pressed()[0] and self.get_active_weapon().shoot() and self.auto_shoot:
-            self.shoot(bullet_group, (width/width_m), (height/height_m))
+            self.shoot(bullet_group, (Ww), (Hh))
             if not self.get_active_weapon().auto_shoot:
                 self.auto_shoot = False
 
@@ -168,4 +168,4 @@ class PLAYER(pygame.sprite.Sprite):
 
         self.rect.center = self.pos
 
-        self.stay_in_arena(width, height)
+        self.stay_in_arena(width_m, height_m)

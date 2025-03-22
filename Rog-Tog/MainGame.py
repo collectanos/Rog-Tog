@@ -15,13 +15,12 @@ import ShootEnemy
 import MainMenu
 from GLOBALS import FPS, WIDTH, HEIGHT, WIDTH_M, HEIGHT_M
 from Hint import Hint
-from Item import HealingItem
 
 pygame.init()
 
-Ww, Hh, = WIDTH / WIDTH_M, HEIGHT / HEIGHT_M
+Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
 
-screen = pygame.Surface((WIDTH, HEIGHT))
+screen = pygame.Surface((WIDTH_M, HEIGHT_M))
 
 arr_enemy = [Enemy.ENEMY, ShootEnemy.SHOOTENEMY]
 
@@ -38,8 +37,6 @@ group_enemy_bullet = pygame.sprite.Group()
 group_chest = pygame.sprite.Group()
 group_item_use = pygame.sprite.Group()
 group_pause_menu = pygame.sprite.Group()
-
-pygame.mouse.set_visible(False)
 
 can_pressed_key_E = True
 can_pressed_key_R = True
@@ -105,16 +102,25 @@ def init():
     group_player.add(pl)
 
 
-def update(delta):
+def update(delta, width, height):
     global can_pressed_key_E, can_pressed_key_P, can_pressed_key_R, group_item, stop_time,\
-        group_item, group_item_use, boss, can_pressed_key_C, space_hint
+        group_item, group_item_use, boss, can_pressed_key_C, space_hint, WIDTH, HEIGHT
+    
+    WIDTH, HEIGHT = width, height
+    Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
 
     group_door.empty()
 
     for event in pygame.event.get():
+        if event.type == pygame.WINDOWRESIZED:
+            WIDTH = event.x
+            HEIGHT = event.y
+            Ww, Hh, = WIDTH_M / WIDTH, HEIGHT_M / HEIGHT
+
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_o or event.key == 1097:
                 init()
@@ -141,7 +147,7 @@ def update(delta):
 
             if event.key == pygame.K_c and can_pressed_key_C:
                 can_pressed_key_C = False
-                group_chest.add(Chest.Chest((random.randint(20, WIDTH-20), random.randint(20, HEIGHT-20))))
+                group_chest.add(Chest.Chest((random.randint(20, WIDTH_M-20), random.randint(20, HEIGHT_M-20))))
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_e or event.key == 1091:
@@ -160,16 +166,16 @@ def update(delta):
 
     for i in lvl.get_doors():
         if i == "up":
-            group_door.add(Door.DOOR([0, -1], [WIDTH//2-20, 20]))
+            group_door.add(Door.DOOR([0, -1], [WIDTH_M // 2 - 20, 20]))
         if i == "down":
-            group_door.add(Door.DOOR([0, 1], [WIDTH//2-20, HEIGHT-20]))
+            group_door.add(Door.DOOR([0, 1], [WIDTH_M // 2 - 20, HEIGHT_M - 20]))
         if i == "left":
-            group_door.add(Door.DOOR([-1, 0], [20, HEIGHT//2-20]))
+            group_door.add(Door.DOOR([-1, 0], [20, HEIGHT_M // 2 - 20]))
         if i == "right":
-            group_door.add(Door.DOOR([1, 0], [WIDTH-20, HEIGHT//2-20]))
+            group_door.add(Door.DOOR([1, 0], [WIDTH_M - 20, HEIGHT_M // 2 - 20]))
 
     if lvl.get_room().dead_boss:
-        d = Door.DOOR([0, 0], [WIDTH // 2 - 20, HEIGHT // 2 - 20])
+        d = Door.DOOR([0, 0], [WIDTH_M // 2 - 20, HEIGHT_M // 2 - 20])
         d.next_lvl = True
         group_door.add(d)
 
@@ -200,16 +206,16 @@ def update(delta):
             group_item_use = lvl.get_room().save_weapon.copy()
 
         if lvl.get_room().type == "Chest" and not lvl.get_room().open_chest:
-            group_chest.add(Chest.Chest((WIDTH // 2, HEIGHT // 2)))
+            group_chest.add(Chest.Chest((WIDTH_M // 2, HEIGHT_M // 2)))
 
         if collision.move_in_map[0] == 1:
             pl.rect.left = 40
         if collision.move_in_map[0] == -1:
-            pl.rect.right = WIDTH-40
+            pl.rect.right = WIDTH_M-40
         if collision.move_in_map[1] == 1:
             pl.rect.top = 40
         if collision.move_in_map[1] == -1:
-            pl.rect.bottom = HEIGHT - 40
+            pl.rect.bottom = HEIGHT_M - 40
 
         group_bullet.empty()
         group_enemy_bullet.empty()
@@ -217,11 +223,11 @@ def update(delta):
 
         if lvl.state == "Fight":
             for _ in range(lvl.count_enemy()):
-                group_enemy.add(random.choice(arr_enemy)([random.randint(20, WIDTH-20),
-                 random.randint(20, HEIGHT-20)]))
+                group_enemy.add(random.choice(arr_enemy)([random.randint(20, WIDTH_M-20),
+                 random.randint(20, HEIGHT_M-20)]))
 
         if lvl.state == "Boss" and not lvl.get_room().dead_boss:
-            boss = Boss.BOSS((WIDTH // 2, HEIGHT // 2))
+            boss = Boss.BOSS((WIDTH_M // 2, HEIGHT_M // 2))
             group_enemy.add(boss)
 
     collision = pygame.sprite.groupcollide(group_bullet, group_enemy, False, False)
@@ -263,8 +269,8 @@ def update(delta):
     if not stop_time:
         group_bullet.update(delta)
         group_enemy_bullet.update(delta)
-        group_player.update(delta, group_bullet, WIDTH, HEIGHT, WIDTH_M, HEIGHT_M)
-        group_enemy.update(delta, pl.pos, group_item, group_enemy_bullet, WIDTH, HEIGHT)
+        group_player.update(delta, group_bullet, Ww, Hh, WIDTH_M, HEIGHT_M)
+        group_enemy.update(delta, pl.pos, group_item, group_enemy_bullet, WIDTH_M, HEIGHT_M)
         group_door.draw(screen)
         group_item.draw(screen)
         group_item_use.draw(screen)
@@ -283,7 +289,7 @@ def update(delta):
     surf = Draw_windows.DRAW().draw_map(lvl.map, lvl.x, lvl.y, size=50)
     surf.set_alpha(190)
     surf = pygame.transform.scale(surf, (100, 100))
-    screen.blit(surf, (WIDTH-115, 15))
+    screen.blit(surf, (WIDTH_M-115, 15))
 
     screen.blit(Draw_windows.DRAW().draw_heal_bar(pl.hp, pl.max_hp), (20, 20))
     level_text = GLOBALS.FONT_TEXT.render(f"Level: {lvl.dif}", False, (255, 255, 255))
@@ -294,16 +300,16 @@ def update(delta):
 
     surf = Draw_windows.DRAW().draw_weapon_interface(pl.get_active_weapon())
     surf.set_alpha(190)
-    screen.blit(surf, (WIDTH-120, HEIGHT-70))
+    screen.blit(surf, (WIDTH_M - 120, HEIGHT_M - 70))
 
     if pl.non_active_weapon():
         surf = Draw_windows.DRAW().draw_weapon_interface(pl.non_active_weapon())
         surf.set_alpha(100)
-        screen.blit(surf, (WIDTH - 120, HEIGHT - 120))
+        screen.blit(surf, (WIDTH_M - 120, HEIGHT_M - 120))
 
     if lvl.state == "Boss" and not lvl.get_room().dead_boss:
-        screen.blit(pygame.transform.scale(Draw_windows.DRAW().draw_heal_bar(boss.HP, boss.hp_max), (WIDTH-40, 12)),
-                    (20, HEIGHT-20))
+        screen.blit(pygame.transform.scale(Draw_windows.DRAW().draw_heal_bar(boss.HP, boss.hp_max), (WIDTH_M-40, 12)),
+                    (20, HEIGHT_M-20))
         if boss.HP < 0:
             lvl.state = "Null"
             lvl.open_doors = True
@@ -317,17 +323,17 @@ def update(delta):
             if btn.command:
                 if btn.pos_in(Mpos):
                     btn.change_color((120, 120, 120))
-                    btn.image = pygame.transform.scale(btn.image, (560, 55))
+                    btn.image = pygame.transform.scale(btn.image, (520, 55))
                     btn.rect = btn.image.get_rect(center=(btn.rect.center))
                     if pygame.mouse.get_pressed()[0]:
                         btn.do_click()
                 else:
                     btn.change_color((90, 90, 90))
-                    btn.image = pygame.transform.scale(btn.image, (560, 55))
+                    btn.image = pygame.transform.scale(btn.image, (520, 55))
                     btn.rect = btn.image.get_rect(center=(btn.rect.center))
 
         group_pause_menu.draw(pause_menu)
-        screen.blit(pause_menu, (240, 100))
+        screen.blit(pause_menu, (190, 100))
 
     if not pl.live():
         init()
@@ -343,4 +349,4 @@ def update(delta):
 
     clock.tick(FPS)
     
-    return screen
+    return pygame.transform.scale(screen, (WIDTH, HEIGHT)), WIDTH, HEIGHT
